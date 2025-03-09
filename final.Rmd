@@ -1,0 +1,1364 @@
+---
+title: "Final project"
+author: "Group4"
+date: "`r Sys.Date()`"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r}
+library(tidyverse)
+library(infer)
+library(dplyr)
+library(ggplot2)
+```
+
+
+
+```{r}
+fashion <- readxl::read_excel("fashion_data_2018_2022.xls")
+```
+
+# Numerical Variables
+
+## price - ChaeJun Lim
+### Histogram
+```{r}
+fashion %>%
+  ggplot()+
+  geom_histogram(mapping = aes(x=price), binwidth=30, color="black",
+                 fill="skyblue")+
+  labs(
+  title = "Price Histogram",
+  x = "Price",
+  y = "Count"
+  )
+```
+
+### Scatterplot
+```{r}
+fashion %>%
+  ggplot()+
+  geom_point(mapping = aes(x=price, y=sales_count))+
+  labs(
+  title = "Price and Sales Count Scatterplot",
+  x = "Price",
+  y = "Sales Count"
+  )
+```
+
+### Boxplot
+```{r}
+fashion %>%
+  ggplot()+
+  geom_boxplot(aes(y=sales_count, x=reorder(price, sales_count, FUN=median)))+
+  labs(
+  title = "Price and Sales Count Boxplot",
+  x = "Price",
+  y = "Sales Count"
+  )
+```
+
+## reviews_count - ChaeJun Lim
+
+### Histogram
+
+```{r}
+fashion %>%
+  ggplot()+
+  geom_histogram(mapping = aes(x=reviews_count), binwidth=20, 
+                 color = "black", fill = "skyblue")+
+  labs(
+  title = "Reviews Count Histogram",
+  x = "Reviews Count",
+  y = "Count"
+  )
+```
+
+### Scatterplot
+
+```{r}
+fashion %>%
+  ggplot()+
+  geom_point(mapping = aes(x=reviews_count, y=sales_count))+
+  labs(
+  title = "Reviews Count and Sales Count Scatterplot",
+  x = "Reviews Count",
+  y = "Sales Count"
+  )
+```
+
+### Boxplot
+```{r}
+fashion %>%
+  ggplot()+
+  geom_boxplot(aes(y=sales_count, x=reorder(reviews_count, sales_count,
+                                          FUN=median)))+
+  labs(
+  title = "Reviews Count and Sales Count Boxplot",
+  x = "Reviews Count",
+  y = "Sales Count"
+  ) +
+  theme(axis.text.x = element_text(angle = 45))
+```
+
+## wish_list_count - Jin Heo
+
+### Histogram
+```{r}
+fashion %>%
+  ggplot()+
+  geom_histogram(mapping = aes(x=wish_list_count), binwidth=50, 
+                 color="black", fill="skyblue")+
+  labs(
+  title = "Wish List Count Histogram",
+  x = "Wish List Count",
+  y = "Count"
+  )
+```
+
+### Scatterplot
+```{r}
+fashion %>%
+  ggplot()+
+  geom_point(mapping = aes(x=wish_list_count, y=sales_count))+
+  labs(
+  title = "Wish List Count and Sales Count Scatterplot",
+  x = "Wish List Count",
+  y = "Sales Count"
+  )
+```
+
+### Boxplot
+```{r}
+fashion %>%
+  ggplot()+
+  geom_boxplot(aes(y=sales_count, x=reorder(wish_list_count, sales_count,
+                                            FUN=median)))+
+  labs(
+  title = "Wish List Count and Sales Count Boxplot",
+  x = "Wish List Count",
+  y = "Sales Count"
+  ) +
+  theme(axis.text.x = element_text(angle = 45))
+```
+
+# Categorical Variables Visualization
+
+## gender - Jin Heo
+
+### Bar graph
+
+```{r}
+fashion %>%
+  ggplot()+
+  geom_bar(mapping = aes(x= gender), binwidth=30)+
+  labs(
+  title = "Gender and Sales Count Bar Graph",
+  x = "Gender",
+  y = "Sales Count"
+  )
+```
+
+```{r, fig.width=14}
+fashion %>%
+  ggplot()+
+  geom_histogram(mapping = aes(x= sales_count), binwidth=70, color = "black",
+                 fill = "grey") + facet_wrap(~ gender) +
+  labs(
+  title = "Gender Histogram",
+  x = "Gender",
+  y = "Count"
+  )
+```
+
+### Boxplot
+```{r}
+fashion %>%
+  ggplot()+
+  geom_boxplot(aes(y=sales_count, x=reorder(gender, sales_count, FUN=median)))+
+  labs(
+  title = "Gender and Sales Count Boxplot",
+  x = "Gender",
+  y = "Sales Count"
+  )
+```
+
+## category - Minseo Yoon
+
+### Bar graph
+```{r}
+fashion %>%
+  ggplot()+
+  geom_bar(mapping = aes(x= category), binwidth=30)+
+  labs(
+  title = "Category and Sales Count Bar Graph",
+  x = "Category",
+  y = "Sales Count"
+  )
+```
+
+### Boxplot
+```{r}
+fashion %>%
+  ggplot()+
+  geom_boxplot(aes(y=sales_count, x=reorder(category, sales_count,
+                                            FUN=median)))+
+  labs(
+  title = "Category and Sales Count Boxplot",
+  x = "Category",
+  y = "Sales Count"
+  )
+```
+
+## pattern - Minseo Yoon
+
+### Bar graph
+```{r}
+fashion %>%
+  ggplot()+
+  geom_bar(mapping = aes(x= pattern), binwidth=30)+
+  labs(
+  title = "Pattern and Sales Count Bar Graph",
+  x = "Pattern",
+  y = "Sales Count"
+  )
+```
+
+### Boxplot
+```{r}
+fashion %>%
+  ggplot()+
+  geom_boxplot(aes(y=sales_count, x=reorder(pattern, sales_count,
+                                            FUN=median)))+
+  labs(
+  title = "Pattern and Sales Count Boxplot",
+  x = "Pattern",
+  y = "Sales Count"
+  )
+```
+
+## color - Seunghyun Ryu
+
+### Bar graph
+```{r}
+fashion %>%
+  ggplot()+
+  geom_bar(mapping = aes(x= color), binwidth=30)+
+  labs(
+  title = "Color and Sales Count Bar Graph",
+  x = "Color",
+  y = "Sales Count"
+  )
+```
+
+### Boxplot
+```{r}
+fashion %>%
+  ggplot()+
+  geom_boxplot(aes(y=sales_count, x=reorder(color, sales_count,
+                                            FUN=median)))+
+  labs(
+  title = "Color and Sales Count Boxplot",
+  x = "Color",
+  y = "Sales Count"
+  )
+```
+
+## age group - Seunghyun Ryu
+
+### Bar graph
+```{r}
+fashion %>%
+  ggplot()+
+  geom_bar(mapping = aes(x= age_group), binwidth=30)+
+  labs(
+  title = "Age Group and Sales Count Bar Graph",
+  x = "Age Group",
+  y = "Sales Count"
+  )
+```
+
+### Histogram
+
+```{r, fig.width=14}
+fashion %>%
+  ggplot()+
+  geom_histogram(mapping = aes(x= sales_count), binwidth=70, color = "black",
+                 fill = "grey") + facet_wrap(~ age_group) +
+  labs(
+  title = "Age Group Histogram",
+  x = "Age Group",
+  y = "Count"
+  )
+```
+
+### Boxplot
+```{r}
+fashion %>%
+  ggplot()+
+  geom_boxplot(aes(y=sales_count, x= reorder(age_group, sales_count,
+                                             FUN=median)))+
+  labs(
+  title = "Age Group and Sales Count Boxplot",
+  x = "Age Group",
+  y = "Sales Count"
+  )
+```
+
+## season - Juheon Kim
+
+### Bar graph
+```{r}
+fashion %>%
+  ggplot()+
+  geom_bar(mapping = aes(x= season), binwidth=30)+
+  labs(
+  title = "Season and Sales Count Bar Graph",
+  x = "Season",
+  y = "Sales Count"
+  )
+```
+
+### Histogram
+
+```{r, fig.width=14}
+fashion %>%
+  ggplot()+
+  geom_histogram(mapping = aes(x= sales_count), binwidth=70, color = "black",
+                 fill = "grey") + facet_wrap(~ season) +
+  labs(
+  title = "Season Histogram",
+  x = "Season",
+  y = "Count"
+  )
+```
+
+### Boxplot
+```{r}
+fashion %>%
+  ggplot()+
+  geom_boxplot(aes(y=sales_count, x=reorder(season, sales_count,
+                                            FUN=median)))+
+  labs(
+  title = "Season and Sales Count Boxplot",
+  x = "Season",
+  y = "Sales Count"
+  )
+```
+
+## material - Juheon Kim
+
+### Bar graph
+```{r}
+fashion %>%
+  ggplot()+
+  geom_bar(mapping = aes(x= material), binwidth=30)+
+  labs(
+  title = "Material and Sales Count Bar Graph",
+  x = "Material",
+  y = "Sales Count"
+  )
+```
+
+### Boxplot
+```{r}
+fashion %>%
+  ggplot()+
+  geom_boxplot(aes(y=sales_count, x=reorder(material, sales_count,
+                                            FUN=median)))+
+  labs(
+  title = "Material and Sales Count Boxplot",
+  x = "Material",
+  y = "Sales Count"
+  )
+```
+
+## average rating - Hyukjoon Choi
+
+### Bar graph
+```{r}
+fashion %>%
+  ggplot()+
+  geom_bar(mapping = aes(x= average_rating), binwidth=30)+
+  labs(
+  title = "Average Rating and Sales Count Bar Graph",
+  x = "Average Rating",
+  y = "Sales Count"
+  )
+```
+
+### Boxplot
+```{r}
+fashion %>%
+  ggplot()+
+  geom_boxplot(aes(y=sales_count, x=reorder(average_rating, sales_count,
+                                            FUN=median)))+
+  labs(
+  title = "Average Rating and Sales Count Boxplot",
+  x = "Average Rating",
+  y = "Sales Count"
+  )
+```
+
+## discount - Hyukjoon Choi
+
+### Bar graph
+```{r}
+fashion %>%
+  ggplot()+
+  geom_bar(mapping = aes(x= discount), binwidth=30)+
+  labs(
+  title = "Discount and Sales Count Bar Graph",
+  x = "Discount",
+  y = "Sales Count"
+  )
+```
+
+### Boxplot
+```{r}
+fashion %>%
+  ggplot()+
+  geom_boxplot(aes(y=sales_count, x=reorder(discount, sales_count,
+                                            FUN=median)))+
+  labs(
+  title = "Discount and Sales Count Boxplot",
+  x = "Discount",
+  y = "Sales Count"
+  )
+```
+
+## out_of_stock_times - ChaeJun Lim
+
+### Histogram
+
+```{r}
+fashion %>%
+  ggplot()+
+  geom_bar(mapping = aes(x=out_of_stock_times), binwidth=30)+
+  labs(
+  title = "Out of Stock Times and Sales Count Bar Graph",
+  x = "Out of Stock Times",
+  y = "Count"
+  )
+```
+
+### Boxplot
+```{r}
+fashion %>%
+  ggplot()+
+  geom_boxplot(aes(y=sales_count, x=reorder(out_of_stock_times,
+                                            sales_count, FUN=median)))+
+  labs(
+  title = "Out of Stock Times and Sales Count Boxplot",
+  x = "Out of Stock Times",
+  y = "Sales Count"
+  )
+```
+
+# Hypothesis 1
+
+## Gender & Sales Count - ChaeJun Lim, Hyukjoon Choi
+
+### Hypothesis: There is at least one relationship between gender and sales count.
+### Alternative: There is at least relationship between gender and sales count.
+
+### Male & Female
+
+```{r}
+fashion %>%
+  select(sales_count) %>%
+  arrange(desc(sales_count)) %>%
+  head(5)
+```
+```{r}
+fashion %>%
+  select(sales_count) %>%
+  arrange(sales_count) %>%
+  head(5)
+```
+
+
+```{r}
+fashion %>%
+  ggplot() +
+  geom_histogram(mapping = aes(x = sales_count, fill = gender),
+  binwidth = 15, alpha = 0.3, position = "identity") +
+  coord_cartesian(xlim = c(50,500)) +
+  labs(
+  title = "histogram of gender",
+  x = "Sales Count",
+  y = "Count"
+  )
+```
+
+```{r}
+fashion %>%
+  group_by(gender) %>%
+  summarize(
+    mean = mean(sales_count),
+    median = median(sales_count),
+    sd = sd(sales_count),
+    min = min(sales_count),
+    max = max(sales_count),
+    IQR = IQR(sales_count)
+  )
+```
+```{r}
+fashion_gender_null <- fashion %>%
+  specify(formula = sales_count ~ gender) %>%
+  hypothesize(null = "independence") %>%
+  generate(reps = 10000, type = "permute") %>%
+  calculate(stat = "diff in means", order = c("Male", "Female"))
+```
+
+```{r}
+fashion_gender_obs_stat <- fashion %>%
+  specify(sales_count ~ gender) %>%
+  calculate(stat = "diff in means", order = c("Male", "Female"))
+```
+
+```{r}
+fashion_gender_null %>%
+  get_p_value(obs_stat = fashion_gender_obs_stat, direction = "two_sided")
+```
+
+```{r, warning=FALSE}
+visualize(fashion_gender_null) +
+  shade_p_value(obs_stat = fashion_gender_obs_stat, direction = "two_sided") +
+  labs(
+  title = "Simulation (gender)",
+  x = "difference in proportions",
+  y = "count"
+  )
+```
+
+# Hypothesis 2
+
+## Age & Sales Count - Seunghyun Ryu, Miseo Yoon
+
+### Hypothesis: There is a relationship between age and sales count.
+### Alternative: There is no relationship between age and sales count.
+
+### 18-24 & 25-35
+
+```{r}
+fashion_age <- fashion %>%
+  filter(age_group == "18-24" | age_group == "25-35")
+```
+
+```{r}
+fashion_age %>%
+  ggplot() +
+  geom_histogram(mapping = aes(x = sales_count, fill = age_group),
+  binwidth = 15, alpha = 0.3, position = "identity") +
+  coord_cartesian(xlim = c(50,500)) +
+  labs(
+  title = "histogram of age group (18-24 & 25-35)",
+  x = "Sales Count",
+  y = "Count"
+  )
+```
+
+```{r}
+fashion_age %>%
+  group_by(age_group) %>%
+  summarize(
+    mean = mean(sales_count),
+    median = median(sales_count),
+    sd = sd(sales_count),
+    min = min(sales_count),
+    max = max(sales_count),
+    IQR = IQR(sales_count)
+  )
+```
+```{r}
+fashion_age_null <- fashion_age %>%
+  specify(formula = sales_count ~ age_group) %>%
+  hypothesize(null = "independence") %>%
+  generate(reps = 10000, type = "permute") %>%
+  calculate(stat = "diff in means", order = c("18-24", "25-35"))
+```
+
+```{r}
+fashion_age_obs_stat <- fashion_age %>%
+  specify(sales_count ~ age_group) %>%
+  calculate(stat = "diff in means", order = c("18-24", "25-35"))
+```
+
+```{r}
+fashion_age_null %>%
+  get_p_value(obs_stat = fashion_age_obs_stat, direction = "two_sided")
+```
+
+```{r, warning=FALSE}
+visualize(fashion_age_null) +
+  shade_p_value(obs_stat = fashion_age_obs_stat, direction = "two_sided") +
+  labs(
+  title = "Simulation 1 (18-24 & 25-35)",
+  x = "difference in proportions",
+  y = "count"
+  )
+```
+
+### 18-24 & 35-45
+
+```{r}
+fashion_age_2 <- fashion %>%
+  filter(age_group == "18-24" | age_group == "35-45")
+```
+
+```{r}
+fashion_age_2 %>%
+  ggplot() +
+  geom_histogram(mapping = aes(x = sales_count, fill = age_group),
+  binwidth = 15, alpha = 0.3, position = "identity") +
+  coord_cartesian(xlim = c(50,500)) +
+  labs(
+  title = "histogram of age group (18-24 & 35-45)",
+  x = "Sales Count",
+  y = "Count"
+  )
+```
+
+```{r}
+fashion_age_2 %>%
+  group_by(age_group) %>%
+  summarize(
+    mean = mean(sales_count),
+    median = median(sales_count),
+    sd = sd(sales_count),
+    min = min(sales_count),
+    max = max(sales_count),
+    IQR = IQR(sales_count)
+  )
+```
+```{r}
+fashion_age_null_2 <- fashion_age_2 %>%
+  specify(formula = sales_count ~ age_group) %>%
+  hypothesize(null = "independence") %>%
+  generate(reps = 10000, type = "permute") %>%
+  calculate(stat = "diff in means", order = c("18-24", "35-45"))
+```
+
+```{r}
+fashion_age_obs_stat_2 <- fashion_age_2 %>%
+  specify(sales_count ~ age_group) %>%
+  calculate(stat = "diff in means", order = c("18-24", "35-45"))
+```
+
+```{r}
+fashion_age_null_2 %>%
+  get_p_value(obs_stat = fashion_age_obs_stat_2, direction = "two_sided")
+```
+
+```{r, warning=FALSE}
+visualize(fashion_age_null_2) +
+  shade_p_value(obs_stat = fashion_age_obs_stat_2, direction = "two_sided") +
+  labs(
+  title = "Simulation 2 (18-24 & 35-45)",
+  x = "difference in proportions",
+  y = "count"
+  )
+```
+
+### 25-35 & 35-45
+
+```{r}
+fashion_age_3 <- fashion %>%
+  filter(age_group == "25-35" | age_group == "35-45")
+```
+
+```{r}
+fashion_age_3 %>%
+  ggplot() +
+  geom_histogram(mapping = aes(x = sales_count, fill = age_group),
+  binwidth = 15, alpha = 0.3, position = "identity") +
+  coord_cartesian(xlim = c(50,500)) +
+  labs(
+  title = "histogram of age group (25-35 & 35-45)",
+  x = "Sales Count",
+  y = "Count"
+  )
+```
+
+```{r}
+fashion_age_3 %>%
+  group_by(age_group) %>%
+  summarize(
+    mean = mean(sales_count),
+    median = median(sales_count),
+    sd = sd(sales_count),
+    min = min(sales_count),
+    max = max(sales_count),
+    IQR = IQR(sales_count)
+  )
+```
+```{r}
+fashion_age_null_3 <- fashion_age_3 %>%
+  specify(formula = sales_count ~ age_group) %>%
+  hypothesize(null = "independence") %>%
+  generate(reps = 10000, type = "permute") %>%
+  calculate(stat = "diff in means", order = c("25-35", "35-45"))
+```
+
+```{r}
+fashion_age_obs_stat_3 <- fashion_age_3 %>%
+  specify(sales_count ~ age_group) %>%
+  calculate(stat = "diff in means", order = c("25-35", "35-45"))
+```
+
+```{r}
+fashion_age_null_3 %>%
+  get_p_value(obs_stat = fashion_age_obs_stat_3, direction = "two_sided")
+```
+
+```{r, warning=FALSE}
+visualize(fashion_age_null_3) +
+  shade_p_value(obs_stat = fashion_age_obs_stat_3, direction = "two_sided") +
+  labs(
+  title = "Simulation 3 (25-35 & 35-45)",
+  x = "difference in proportions",
+  y = "count"
+  )
+```
+
+
+# Hypothesis 3
+
+## Season & Sales Count - Jin Heo, Juheon Kim
+
+### Hypothesis: There is at least one relationship between age and sales count.
+### Alternative: There is at least relationship between age and sales count.
+
+### All & Spring
+
+```{r}
+fashion_season <-fashion %>%
+  filter(season == "All" | season == "Spring")
+```
+
+```{r}
+fashion_season %>%
+  ggplot() +
+  geom_histogram(mapping = aes(x = sales_count, fill = season),
+  binwidth = 15, alpha = 0.3, position = "identity") +
+  coord_cartesian(xlim = c(50,500)) +
+  labs(
+  title = "histogram of season (All & Spring)",
+  x = "Sales Count",
+  y = "Count"
+  )
+```
+
+```{r}
+fashion_season %>%
+  group_by(season) %>%
+  summarize(
+    mean = mean(sales_count),
+    median = median(sales_count),
+    sd = sd(sales_count),
+    min = min(sales_count),
+    max = max(sales_count),
+    IQR = IQR(sales_count)
+  )
+```
+
+```{r}
+fashion_season_null <- fashion_season %>%
+  specify(formula = sales_count ~ season) %>%
+  hypothesize(null = "independence") %>%
+  generate(reps = 10000, type = "permute") %>%
+  calculate(stat = "diff in means", order = c("All", "Spring"))
+```
+
+```{r}
+fashion_season_obs_stat <- fashion_season %>%
+  specify(sales_count ~ season) %>%
+  calculate(stat = "diff in means", order = c("All", "Spring"))
+```
+
+```{r}
+fashion_season_null %>%
+  get_p_value(obs_stat = fashion_season_obs_stat, direction = "two_sided")
+```
+
+```{r, warning=FALSE}
+visualize(fashion_season_null) +
+  shade_p_value(obs_stat = fashion_season_obs_stat, direction = "two_sided") +
+  labs(
+  title = "Simulation 1 (All & Spring)",
+  x = "difference in proportions",
+  y = "count"
+  )
+```
+
+### All & Summer
+
+```{r}
+fashion_season_2 <-fashion %>%
+  filter(season == "All" | season == "Summer")
+```
+
+```{r}
+fashion_season_2 %>%
+  ggplot() +
+  geom_histogram(mapping = aes(x = sales_count, fill = season),
+  binwidth = 15, alpha = 0.3, position = "identity") +
+  coord_cartesian(xlim = c(50,500)) +
+  labs(
+  title = "histogram of season (All & Summer)",
+  x = "Sales Count",
+  y = "Count"
+  )
+```
+
+```{r}
+fashion_season_2 %>%
+  group_by(season) %>%
+  summarize(
+    mean = mean(sales_count),
+    median = median(sales_count),
+    sd = sd(sales_count),
+    min = min(sales_count),
+    max = max(sales_count),
+    IQR = IQR(sales_count)
+  )
+```
+
+```{r}
+fashion_season_null_2 <- fashion_season_2 %>%
+  specify(formula = sales_count ~ season) %>%
+  hypothesize(null = "independence") %>%
+  generate(reps = 10000, type = "permute") %>%
+  calculate(stat = "diff in means", order = c("All", "Summer"))
+```
+
+```{r}
+fashion_season_obs_stat_2 <- fashion_season_2 %>%
+  specify(sales_count ~ season) %>%
+  calculate(stat = "diff in means", order = c("All", "Summer"))
+```
+
+```{r}
+fashion_season_null_2 %>%
+  get_p_value(obs_stat = fashion_season_obs_stat_2, direction = "two_sided")
+```
+
+```{r, warning=FALSE}
+visualize(fashion_season_null_2) +
+  shade_p_value(obs_stat = fashion_season_obs_stat_2, direction = "two_sided") +
+  labs(
+  title = "Simulation 2 (All & Summer)",
+  x = "difference in proportions",
+  y = "count"
+  )
+```
+
+### All & Autumn
+
+```{r}
+fashion_season_3 <-fashion %>%
+  filter(season == "All" | season == "Autumn")
+```
+
+```{r}
+fashion_season_3 %>%
+  ggplot() +
+  geom_histogram(mapping = aes(x = sales_count, fill = season),
+  binwidth = 15, alpha = 0.3, position = "identity") +
+  coord_cartesian(xlim = c(50,500)) +
+  labs(
+  title = "histogram of season (All & Autumn)",
+  x = "Sales Count",
+  y = "Count"
+  )
+```
+
+```{r}
+fashion_season_3 %>%
+  group_by(season) %>%
+  summarize(
+    mean = mean(sales_count),
+    median = median(sales_count),
+    sd = sd(sales_count),
+    min = min(sales_count),
+    max = max(sales_count),
+    IQR = IQR(sales_count)
+  )
+```
+
+```{r}
+fashion_season_null_3 <- fashion_season_3 %>%
+  specify(formula = sales_count ~ season) %>%
+  hypothesize(null = "independence") %>%
+  generate(reps = 10000, type = "permute") %>%
+  calculate(stat = "diff in means", order = c("All", "Autumn"))
+```
+
+```{r}
+fashion_season_obs_stat_3 <- fashion_season_3 %>%
+  specify(sales_count ~ season) %>%
+  calculate(stat = "diff in means", order = c("All", "Autumn"))
+```
+
+```{r}
+fashion_season_null_3 %>%
+  get_p_value(obs_stat = fashion_season_obs_stat_3, direction = "two_sided")
+```
+
+```{r, warning=FALSE}
+visualize(fashion_season_null_3) +
+  shade_p_value(obs_stat = fashion_season_obs_stat_3, direction = "two_sided") +
+  labs(
+  title = "Simulation 3 (All & Autumn)",
+  x = "difference in proportions",
+  y = "count"
+  )
+```
+
+### All & Winter
+
+```{r}
+fashion_season_4 <-fashion %>%
+  filter(season == "All" | season == "Winter")
+```
+
+```{r}
+fashion_season_4 %>%
+  ggplot() +
+  geom_histogram(mapping = aes(x = sales_count, fill = season),
+  binwidth = 15, alpha = 0.3, position = "identity") +
+  coord_cartesian(xlim = c(50,500)) +
+  labs(
+  title = "histogram of season (All & Winter)",
+  x = "Sales Count",
+  y = "Count"
+  )
+```
+
+```{r}
+fashion_season_4 %>%
+  group_by(season) %>%
+  summarize(
+    mean = mean(sales_count),
+    median = median(sales_count),
+    sd = sd(sales_count),
+    min = min(sales_count),
+    max = max(sales_count),
+    IQR = IQR(sales_count)
+  )
+```
+
+```{r}
+fashion_season_null_4 <- fashion_season_4 %>%
+  specify(formula = sales_count ~ season) %>%
+  hypothesize(null = "independence") %>%
+  generate(reps = 10000, type = "permute") %>%
+  calculate(stat = "diff in means", order = c("All", "Winter"))
+```
+
+```{r}
+fashion_season_obs_stat_4 <- fashion_season_4 %>%
+  specify(sales_count ~ season) %>%
+  calculate(stat = "diff in means", order = c("All", "Winter"))
+```
+
+```{r}
+fashion_season_null_4 %>%
+  get_p_value(obs_stat = fashion_season_obs_stat_4, direction = "two_sided")
+```
+
+```{r, warning=FALSE}
+visualize(fashion_season_null_4) +
+  shade_p_value(obs_stat = fashion_season_obs_stat_4, direction = "two_sided") +
+  labs(
+  title = "Simulation 4 (All & Winter)",
+  x = "difference in proportions",
+  y = "count"
+  )
+```
+
+### Spring & Summer
+
+```{r}
+fashion_season_5 <-fashion %>%
+  filter(season == "Spring" | season == "Summer")
+```
+
+```{r}
+fashion_season_5 %>%
+  ggplot() +
+  geom_histogram(mapping = aes(x = sales_count, fill = season),
+  binwidth = 15, alpha = 0.3, position = "identity") +
+  coord_cartesian(xlim = c(50,500)) +
+  labs(
+  title = "histogram of season (Spring & Summer)",
+  x = "Sales Count",
+  y = "Count"
+  )
+```
+
+```{r}
+fashion_season_5 %>%
+  group_by(season) %>%
+  summarize(
+    mean = mean(sales_count),
+    median = median(sales_count),
+    sd = sd(sales_count),
+    min = min(sales_count),
+    max = max(sales_count),
+    IQR = IQR(sales_count)
+  )
+```
+
+```{r}
+fashion_season_null_5 <- fashion_season_5 %>%
+  specify(formula = sales_count ~ season) %>%
+  hypothesize(null = "independence") %>%
+  generate(reps = 10000, type = "permute") %>%
+  calculate(stat = "diff in means", order = c("Spring", "Summer"))
+```
+
+```{r}
+fashion_season_obs_stat_5 <- fashion_season_5 %>%
+  specify(sales_count ~ season) %>%
+  calculate(stat = "diff in means", order = c("Spring", "Summer"))
+```
+
+```{r}
+fashion_season_null_5 %>%
+  get_p_value(obs_stat = fashion_season_obs_stat_5, direction = "two_sided")
+```
+
+```{r, warning=FALSE}
+visualize(fashion_season_null_5) +
+  shade_p_value(obs_stat = fashion_season_obs_stat_5, direction = "two_sided") +
+  labs(
+  title = "Simulation 5 (Spring & Summer)",
+  x = "difference in proportions",
+  y = "count"
+  )
+```
+
+
+### Spring & Autumn
+
+```{r}
+fashion_season_6 <- fashion %>%
+  filter(season == "Spring" | season == "Autumn")
+```
+
+```{r}
+fashion_season_6 %>%
+  ggplot() +
+  geom_histogram(mapping = aes(x = sales_count, fill = season),
+  binwidth = 15, alpha = 0.3, position = "identity") +
+  coord_cartesian(xlim = c(50,500)) +
+  labs(
+  title = "histogram of season (Spring & Autumn)",
+  x = "Sales Count",
+  y = "Count"
+  )
+```
+
+
+```{r}
+fashion_season_6 %>%
+  group_by(season) %>%
+  summarize(
+    mean = mean(sales_count),
+    median = median(sales_count),
+    sd = sd(sales_count),
+    min = min(sales_count),
+    max = max(sales_count),
+    IQR = IQR(sales_count)
+  )
+```
+
+```{r}
+fashion_season_null_6 <- fashion_season_6 %>%
+  specify(formula = sales_count ~ season) %>%
+  hypothesize(null = "independence") %>%
+  generate(reps = 10000, type = "permute") %>%
+  calculate(stat = "diff in means", order = c("Spring", "Autumn"))
+```
+
+```{r}
+fashion_season_obs_stat_6 <- fashion_season_6 %>%
+  specify(sales_count ~ season) %>%
+  calculate(stat = "diff in means", order = c("Spring", "Autumn"))
+```
+
+```{r}
+fashion_season_null_6 %>%
+  get_p_value(obs_stat = fashion_season_obs_stat_6, direction = "two_sided")
+```
+
+```{r, warning=FALSE}
+visualize(fashion_season_null_6) +
+  shade_p_value(obs_stat = fashion_season_obs_stat_6,
+                direction = "two_sided") +
+  labs(
+  title = "Simulation 6 (Spring & Autumn)",
+  x = "difference in proportions",
+  y = "count"
+  )
+```
+
+### Spring & Winter
+```{r}
+fashion_season_7 <- fashion %>%
+  filter(season == "Spring" | season == "Winter")
+```
+
+
+```{r}
+fashion_season_7 %>%
+  ggplot() +
+  geom_histogram(mapping = aes(x = sales_count, fill = season),
+  binwidth = 15, alpha = 0.3, position = "identity") +
+  coord_cartesian(xlim = c(50,500)) +
+  labs(
+  title = "histogram of season (Spring & Winter)",
+  x = "Sales Count",
+  y = "Count"
+  )
+```
+
+
+```{r}
+fashion_season_7 %>%
+  group_by(season) %>%
+  summarize(
+    mean = mean(sales_count),
+    median = median(sales_count),
+    sd = sd(sales_count),
+    min = min(sales_count),
+    max = max(sales_count),
+    IQR = IQR(sales_count)
+  )
+```
+
+```{r}
+fashion_season_null_7 <- fashion_season_7 %>%
+  specify(formula = sales_count ~ season) %>%
+  hypothesize(null = "independence") %>%
+  generate(reps = 10000, type = "permute") %>%
+  calculate(stat = "diff in means", order = c("Spring", "Winter"))
+```
+
+```{r}
+fashion_season_obs_stat_7 <- fashion_season_7 %>%
+  specify(sales_count ~ season) %>%
+  calculate(stat = "diff in means", order = c("Spring", "Winter"))
+```
+
+```{r}
+fashion_season_null_7 %>%
+  get_p_value(obs_stat = fashion_season_obs_stat_7, direction = "two_sided")
+```
+
+```{r, warning=FALSE}
+visualize(fashion_season_null_7) +
+  shade_p_value(obs_stat = fashion_season_obs_stat_7, direction = "two_sided") +
+  labs(
+  title = "Simulation 7 (Spring & Winter)",
+  x = "difference in proportions",
+  y = "count"
+  )
+```
+
+### Summer & Autumn
+
+```{r}
+fashion_season_8 <- fashion %>%
+  filter(season == "Summer" | season == "Autumn")
+```
+
+
+```{r}
+fashion_season_8 %>%
+  ggplot() +
+  geom_histogram(mapping = aes(x = sales_count, fill = season),
+  binwidth = 15, alpha = 0.3, position = "identity") +
+  coord_cartesian(xlim = c(50,500)) +
+  labs(
+  title = "histogram of season (Summer & Autumn)",
+  x = "Sales Count",
+  y = "Count"
+  )
+```
+
+
+```{r}
+fashion_season_8 %>%
+  group_by(season) %>%
+  summarize(
+    mean = mean(sales_count),
+    median = median(sales_count),
+    sd = sd(sales_count),
+    min = min(sales_count),
+    max = max(sales_count),
+    IQR = IQR(sales_count)
+  )
+```
+
+```{r}
+fashion_season_null_8 <- fashion_season_8 %>%
+  specify(formula = sales_count ~ season) %>%
+  hypothesize(null = "independence") %>%
+  generate(reps = 10000, type = "permute") %>%
+  calculate(stat = "diff in means", order = c("Summer", "Autumn"))
+```
+
+```{r}
+fashion_season_obs_stat_8 <- fashion_season_8 %>%
+  specify(sales_count ~ season) %>%
+  calculate(stat = "diff in means", order = c("Summer", "Autumn"))
+```
+
+```{r}
+fashion_season_null_8 %>%
+  get_p_value(obs_stat = fashion_season_obs_stat_8, direction = "two_sided")
+```
+
+```{r, warning=FALSE}
+visualize(fashion_season_null_8) +
+  shade_p_value(obs_stat = fashion_season_obs_stat_8, direction = "two_sided") +
+  labs(
+  title = "Simulation 8 (Summer & Autumn)",
+  x = "difference in proportions",
+  y = "count"
+  )
+```
+
+### Summer & Winter
+
+```{r}
+fashion_season_9 <- fashion %>%
+  filter(season == "Summer" | season == "Winter")
+```
+
+```{r}
+fashion_season_9 %>%
+  ggplot() +
+  geom_histogram(mapping = aes(x = sales_count, fill = season),
+  binwidth = 15, alpha = 0.3, position = "identity") +
+  coord_cartesian(xlim = c(50,500)) +
+  labs(
+  title = "histogram of season (Summer & Winter)",
+  x = "Sales Count",
+  y = "Count"
+  )
+```
+
+
+```{r}
+fashion_season_9 %>%
+  group_by(season) %>%
+  summarize(
+    mean = mean(sales_count),
+    median = median(sales_count),
+    sd = sd(sales_count),
+    min = min(sales_count),
+    max = max(sales_count),
+    IQR = IQR(sales_count)
+  )
+```
+
+```{r}
+fashion_season_null_9 <- fashion_season_9 %>%
+  specify(formula = sales_count ~ season) %>%
+  hypothesize(null = "independence") %>%
+  generate(reps = 10000, type = "permute") %>%
+  calculate(stat = "diff in means", order = c("Summer", "Winter"))
+```
+
+```{r}
+fashion_season_obs_stat_9 <- fashion_season_9 %>%
+  specify(sales_count ~ season) %>%
+  calculate(stat = "diff in means", order = c("Summer", "Winter"))
+```
+
+```{r}
+fashion_season_null_9 %>%
+  get_p_value(obs_stat = fashion_season_obs_stat_9, direction = "two_sided")
+```
+
+```{r, warning=FALSE}
+visualize(fashion_season_null_9) +
+  shade_p_value(obs_stat = fashion_season_obs_stat_9, direction = "two_sided") +
+  labs(
+  title = "Simulation 9 (Summer & Winter)",
+  x = "difference in proportions",
+  y = "count"
+  )
+```
+
+### Autumn & Winter
+
+```{r}
+fashion_season_10 <- fashion %>%
+  filter(season == "Autumn" | season == "Winter")
+```
+
+```{r}
+fashion_season_10 %>%
+  ggplot() +
+  geom_histogram(mapping = aes(x = sales_count, fill = season),
+  binwidth = 15, alpha = 0.3, position = "identity") +
+  coord_cartesian(xlim = c(50,500)) +
+  labs(
+  title = "histogram of season (Autumn & Winter)",
+  x = "Sales Count",
+  y = "Count"
+  )
+```
+
+
+```{r}
+fashion_season_10 %>%
+  group_by(season) %>%
+  summarize(
+    mean = mean(sales_count),
+    median = median(sales_count),
+    sd = sd(sales_count),
+    min = min(sales_count),
+    max = max(sales_count),
+    IQR = IQR(sales_count)
+  )
+```
+
+```{r}
+fashion_season_null_10 <- fashion_season_10 %>%
+  specify(formula = sales_count ~ season) %>%
+  hypothesize(null = "independence") %>%
+  generate(reps = 10000, type = "permute") %>%
+  calculate(stat = "diff in means", order = c("Autumn", "Winter"))
+```
+
+```{r}
+fashion_season_obs_stat_10 <- fashion_season_10 %>%
+  specify(sales_count ~ season) %>%
+  calculate(stat = "diff in means", order = c("Autumn", "Winter"))
+```
+
+```{r}
+fashion_season_null_10 %>%
+  get_p_value(obs_stat = fashion_season_obs_stat_10, direction = "two_sided")
+```
+
+```{r, warning=FALSE}
+visualize(fashion_season_null_10) +
+  shade_p_value(obs_stat = fashion_season_obs_stat_10, direction = "two_sided") +
+  labs(
+  title = "Simulation 10 (Autumn & Winter)",
+  x = "difference in proportions",
+  y = "count"
+  )
+```
+
+
